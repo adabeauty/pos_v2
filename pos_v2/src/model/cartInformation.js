@@ -1,43 +1,49 @@
-function cartInformation(barcodes){
-
-  var _this = this;
+function CartInformation(barcodes,allItems){
 
   this.barcodes = barcodes;
-  this.cartList = [];
+  this.allItems = allItems;
+}
 
-  var  judgeBarcodeHasExsited = function (barcode){
 
-    var judgeValue;
+CartInformation.prototype.getAllCarList = function(){
+  var  judgeBarcodeHasExsited = function (barcode,  allCartList){
 
-    for(var i=0; i< _this.cartList.length; i++){
-      if(barcode === _this.cartList[i].barcode){
-        judgeValue = _this.cartList[i] ;
+    var judgeValue = 0;
+
+    for(var i=0; i<allCartList.length; i++){
+      if(barcode ===  allCartList[i].item.barcode){
+        judgeValue =  allCartList[i] ;
         break;
       }
 
     }
     return judgeValue;
-  }
+  };
 
-  var countGoodsQuantity = function(){
+  var getItem = function (allItems,barcode){
 
-//    var goodsQuantity = [];                    //可以抽象为类
-
-    for (var i=0;i<_this.barcodes.length;i++){
-
-      var barcode = _this.barcodes[i];
-      var barcodeHasExsited = judgeBarcodeHasExsited(barcode);
-
-      if(barcodeHasExsited){
-        barcodeHasExsited.quantity ++;
-      } else{
-         _this.cartList.push(new pos(barcode,1));
+    var item;
+    for(var i=0; i<allItems.length; i++){
+      if(allItems[i].barcode === barcode){
+          item = allItems[i];
       }
+    }
+    return item;
+  };
 
+  var allCartList = [];
+  for (var i=0;i<this.barcodes.length;i++){
+
+    var barcode = this.barcodes[i];
+    var barcodeHasExsited = judgeBarcodeHasExsited(barcode, allCartList);
+
+    if(barcodeHasExsited){
+      barcodeHasExsited.quantity ++;
+    } else{
+      allCartList.push(new cartItem(getItem(this.allItems,barcode), 1));
     }
 
-//    return goodsQuantity;
-
   }
+  return allCartList;
 
-}
+};
